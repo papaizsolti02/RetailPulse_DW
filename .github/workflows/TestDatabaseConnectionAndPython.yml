@@ -30,8 +30,14 @@ jobs:
     runs-on: self-hosted
 
     steps:
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          miniconda-version: 'latest'
+          auto-activate-base: false
+
       - name: Install packages from requirements.txt
         run: conda run -n RetailPulse_DW pip install --ignore-installed -r requirements.txt
 
-      - name: Run Hello World in Conda env
-        run: conda run -n RetailPulse_DW python -c "print('Hello, world from Conda env!')"
+      - name: Run Hello World from Conda env
+        run: conda run -n RetailPulse_DW python -c "print('✅ Hello, world from Conda env!')"
