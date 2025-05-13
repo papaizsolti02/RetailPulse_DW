@@ -1,0 +1,25 @@
+name: Test SQL Server Connection (Local)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-connection:
+    runs-on: self-hosted
+
+    env:
+      SQL_SERVER: ZSOLTI           # Change if using a named instance (e.g. localhost\SQLEXPRESS)
+      SQL_DB: AdventureWorks2022      # The database to connect to
+
+    steps:
+      - name: Test SQL Server Connection
+        shell: pwsh
+        run: |
+          Write-Host "Testing connection to SQL Server at $env:SQL_SERVER..."
+          try {
+            sqlcmd -S $env:SQL_SERVER -d $env:SQL_DB -E -Q "SELECT @@SERVERNAME AS [ServerName];"
+            Write-Host "Connection succeeded."
+          } catch {
+            Write-Error "Connection failed. Error: $_"
+            exit 1
+          }
