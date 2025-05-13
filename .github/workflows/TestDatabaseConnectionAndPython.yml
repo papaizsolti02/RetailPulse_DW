@@ -10,7 +10,7 @@ jobs:
 
     env:
       SQL_SERVER: ${{ secrets.SQL_SERVER }}
-      SQL_DB: ${{ secrets.SQL_DB }}
+      SQL_DB: ${{ secrets.SQL_DATABASE }}
 
     steps:
       - name: Test SQL Server Connection with sqlcmd
@@ -18,7 +18,7 @@ jobs:
         run: |
           Write-Host "Testing connection to SQL Server at $env:SQL_SERVER..."
           try {
-            sqlcmd -S $env:SQL_SERVER -d $env:SQL_DB -E -Q "SELECT @@SERVERNAME AS [ServerName];"
+            sqlcmd -S $env:SQL_SERVER -d $env:SQL_DATABASE -E -Q "SELECT @@SERVERNAME AS [ServerName];"
             Write-Host "Connection succeeded to the SQL Database."
           } catch {
             Write-Error "Connection failed. Error: $_"
