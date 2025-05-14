@@ -33,5 +33,4 @@ jobs:
       - name: Run Hello World from Python
         shell: cmd
         run: |
-          CALL "C:\Users\papai\anaconda3\Scripts\activate.bat" RetailPulse_DW
-          python -c "print('Hello, world from Python!')"
+          CALL "C:\Users\papai\anaconda3\Scripts\activate.bat" RetailPulse_DW && python -c "print('Hello, world from Python!')"
