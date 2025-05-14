@@ -1,0 +1,24 @@
+[sqlfluff]
+dialect = tsql
+templater = jinja
+
+rules = CP01,CP05,AM05,AM06,AM07
+
+exclude_rules = AL01,AL02,AL03,AL04,AL05,AL06,AL07,AL08,AL09,AM01,AM02,AM03,AM04,CP02,CP03,CP04,CV01,CV02,CV03,CV04,CV05,CV06,CV07,CV08,CV09,CV10,CV11,JJ01,LT01,LT02,LT03,LT04,LT05,LT06,LT07,LT08,LT09,LT10,LT11,LT12,LT13,RF01,RF02,RF03,RF04,RF05,RF06,ST01,ST02,ST03,ST04,ST05,ST06,ST07,ST08,ST09,TQ01
+
+max_line_length = 0
+large_file_skip_byte_limit = 0
+
+processes = -1
+
+[sqlfluff:indentation]
+allow_implicit_indents = True
+
+[sqlfluff:rules:aliasing.length]
+min_alias_length = 1
+
+[sqlfluff:capitalisation:identifiers]
+extended_capitalisation_policy = upper
+
+[sqlfluff:capitalisation:types]
+extended_capitalisation_policy = upper
