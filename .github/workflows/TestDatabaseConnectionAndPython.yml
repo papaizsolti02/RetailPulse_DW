@@ -30,10 +30,6 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Set up Python 3.11.11
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11.2'
 
       - name: Install dependencies from requirements.txt
         run: |
@@ -42,4 +38,5 @@ jobs:
 
       - name: Run Hello World from Python
         run: |
+          python --version
           python -c "print('Hello, world from Python 3.11.11!')"
