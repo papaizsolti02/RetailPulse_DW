@@ -30,13 +30,7 @@ jobs:
     runs-on: self-hosted
 
     steps:
-
-      - name: Install dependencies from requirements.txt
-        run: |
-          python -m pip install --upgrade pip
-          pip install --ignore-installed -r requirements.txt
-
       - name: Run Hello World from Python
         run: |
           python --version
-          python -c "print('Hello, world from Python 3.11.11!')"
+          python -c "print('Hello, world from Python 3.11.2!')"
