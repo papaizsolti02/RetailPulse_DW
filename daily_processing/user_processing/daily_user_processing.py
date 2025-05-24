@@ -1,39 +1,52 @@
-import os
 import json
 import pyodbc
 import requests
+from typing import List, Tuple
 
-def daily_user_processing():
-	"""
-		This function is responsible for processing user data on a daily basis.
-		It retrieves user data from an external API, processes it, and stores the results in a database.
-	"""
 
-	users = requests.get(
-    	"https://randomuser.me/api/?results=5000"
-  	).json().get('results')
+def daily_user_processing(
+    connection: pyodbc.Connection,
+    cursor: pyodbc.Cursor
+) -> None:
+    """
+    Retrieves user data from the RandomUser API, formats it, and ingests it
+    into the SQL Server database via a stored procedure.
 
-	records = [(json.dumps(user), 'https://randomuser.me/api/') for user in users]
+    Parameters:
+        connection (pyodbc.Connection): An active connection to the SQL Server database.
+        cursor (pyodbc.Cursor): A cursor object for executing SQL commands.
 
-	#server = "=="
-	#db = "=="
+    Returns:
+        None
+    """
+    try:
+        print("Fetching user data from external API...")
+        response = requests.get("https://randomuser.me/api/?results=5000")
+        response.raise_for_status()
+        users = response.json().get('results', [])
 
-	conn = pyodbc.connect(
-		'DRIVER={ODBC Driver 17 for SQL Server};'
-		f'SERVER={server};'
-		f'DATABASE={db};'
-		'Trusted_Connection=yes;'
-  	)
+        if not users:
+            print("No user data retrieved from API.")
+            return
 
-	cursor = conn.cursor()
-	cursor.fast_executemany = True
+        print(f"Retrieved {len(users)} users.")
 
-	sp_call = "{CALL [raw].[IngestRawUsers] (?, ?)}"
+        records: List[Tuple[str, str]] = [
+            (json.dumps(user), 'https://randomuser.me/api/') for user in users
+        ]
 
-	cursor.executemany(sp_call, records)
-	conn.commit()
+        sp_call = "{CALL [raw].[IngestRawUsers] (?, ?)}"
 
-	cursor.close()
-	conn.close()
+        print("Inserting raw user data into the database...")
+        cursor.executemany(sp_call, records)
+        connection.commit()
 
-daily_user_processing()
+        print("User data inserted successfully.")
+    except requests.RequestException as req_err:
+        print(f"Failed to fetch user data from API: {req_err}")
+    except pyodbc.Error as db_err:
+        print(f"Database error during insertion: {db_err}")
+        connection.rollback()
+    except Exception as ex:
+        print(f"Unexpected error occurred: {ex}")
+        connection.rollback()
