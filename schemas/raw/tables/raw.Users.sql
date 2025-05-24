@@ -1,0 +1,5 @@
+CREATE TABLE raw.Users (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    InsertedAt DATETIME DEFAULT GETDATE(),
+    RawJson NVARCHAR(MAX)
+);
