@@ -1,0 +1,17 @@
+CREATE TABLE [stage].[Users] (
+    [Id] INT IDENTITY(1,1) PRIMARY KEY,
+    [Source] NVARCHAR(255) NULL,
+    [Gender] CHAR(1) NOT NULL,
+    [FullName] NVARCHAR(255) NOT NULL,
+    [FirstName] NVARCHAR(100) NOT NULL,
+    [LastName] NVARCHAR(100) NOT NULL,
+    [Email] NVARCHAR(320) NOT NULL,
+    [Currency] NVARCHAR(10) NULL,
+    [Country] NVARCHAR(100) NOT NULL,
+    [State] NVARCHAR(100) NULL,
+    [City] NVARCHAR(100) NULL,
+    [StreetName] NVARCHAR(255) NULL,
+    [InsertedAt] DATETIME DEFAULT GETDATE(),
+    [ROWHASH] VARBINARY(6000),
+    [HASHDATA] VARCHAR(MAX)
+);
