@@ -41,6 +41,10 @@ def daily_user_processing(
         cursor.executemany(sp_call, records)
         connection.commit()
 
+        print("Processing Raw Users into the staging table, processing TerritoriesDim, SubTerritoriesDim into production tables...")
+        cursor.execute("EXEC [stage].[ProcessRawUsers]")
+        connection.commit()
+
         print("User data inserted successfully.")
     except requests.RequestException as req_err:
         print(f"Failed to fetch user data from API: {req_err}")
