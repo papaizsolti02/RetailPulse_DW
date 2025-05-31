@@ -35,6 +35,9 @@ def daily_user_processing(
             (json.dumps(user), 'https://randomuser.me/api/') for user in users
         ]
 
+        # Truncate raw Users table
+        cursor.execute(f"TRUNCATE TABLE [raw].Users")
+
         sp_call = "{CALL [raw].[IngestRawUsers] (?, ?)}"
 
         print("Inserting raw user data into the database...")
