@@ -1,0 +1,25 @@
+name: Run Daily Processing Script
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  run-daily-processing:
+    name: Execute daily_processing.py
+    runs-on: self-hosted
+
+    env:
+      SQL_SERVER: ${{ secrets.SQL_SERVER }}
+      SQL_DATABASE: ${{ secrets.SQL_DATABASE }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Run daily_processing.py with Conda and environment variables
+        shell: cmd
+        run: |
+          CALL "C:\Users\papai\anaconda3\Scripts\activate.bat" RetailPulse_DW && python ./daily_processing.py
