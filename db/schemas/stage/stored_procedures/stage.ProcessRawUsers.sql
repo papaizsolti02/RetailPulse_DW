@@ -107,6 +107,8 @@ BEGIN
 
         EXEC config.HashTableEntries @DataSourceId = 1;
 
+		EXEC prod.UpsertUsersDim;
+
         COMMIT TRANSACTION;
     END TRY
     BEGIN CATCH
