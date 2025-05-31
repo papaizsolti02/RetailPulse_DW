@@ -1,0 +1,16 @@
+CREATE TABLE [stage].[Territories](
+	[TerritoryId] [int] IDENTITY(1,1) NOT NULL,
+	[Country] [nvarchar](100) NOT NULL,
+	[State] [nvarchar](100) NOT NULL,
+	[CreatedAt] [datetime] NULL,
+	[BUSINESSKEYHASH] [varbinary](6000) NULL,
+	[HASHDATA] [varchar](MAX) NULL,
+PRIMARY KEY CLUSTERED
+(
+	[TerritoryId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [stage].[Territories] ADD  DEFAULT (getdate()) FOR [CreatedAt]
+GO
