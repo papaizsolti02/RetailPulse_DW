@@ -1,7 +1,9 @@
 import pyodbc
 import random
+import logging
 import pandas as pd
 from faker import Faker
+import utils.logger_config
 from .ingest_and_process_products_db import ingest_and_process_products_db
 
 def product_processing(
@@ -9,6 +11,9 @@ def product_processing(
     cursor: pyodbc.Cursor
 ) -> None:
     try:
+        logger = logging.getLogger(__name__)
+
+        logger.info("Generating products!")
         fake = Faker()
 
         brands = ["Nike", "Adidas", "Zara", "H&M", "Uniqlo", "Puma", "Levi's", "Under Armour", "Gap", "Reebok"]
@@ -52,9 +57,10 @@ def product_processing(
 
             generated_products.append(product)
 
+        logger.info("Products saved into datalake!")
         df = pd.DataFrame(generated_products)
         df.to_csv("datalake/raw_products.csv", index=False)
 
         ingest_and_process_products_db(connection, cursor, df)
     except Exception as e:
-        print(f"Error during product processing: {e}")
+        logger.error(f"Error during product processing: {e}!")
