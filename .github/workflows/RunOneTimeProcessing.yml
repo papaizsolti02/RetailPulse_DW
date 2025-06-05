@@ -1,0 +1,22 @@
+name: Run One-Time Processing Script
+
+on:
+  workflow_dispatch:  # Only runs manually via GitHub Actions UI
+
+jobs:
+  run-one-time-processing:
+    name: Execute one_time_processing.py
+    runs-on: self-hosted
+
+    env:
+      SQL_SERVER: ${{ secrets.SQL_SERVER }}
+      SQL_DATABASE: ${{ secrets.SQL_DATABASE }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Run one_time_processing.py with Conda and environment variables
+        shell: cmd
+        run: |
+          CALL "C:\Users\papai\anaconda3\Scripts\activate.bat" RetailPulse_DW && python ./one_time_processing.py
