@@ -40,5 +40,9 @@ def ingest_and_process_products_db(
         cursor.execute("EXEC [prod].[UpsertProductsDim]")
         connection.commit()
         logger.info("Staged products upserted successfully!")
-    except Exception as e:
-        logger.error(f"Error during products ingestion: {e}!")
+    except pyodbc.Error as db_err:
+        logger.error(f"Database error during insertion/processing: {db_err}!")
+        connection.rollback()
+    except Exception as ex:
+        logger.error(f"Unexpected error occurred: {ex}!")
+        connection.rollback()
