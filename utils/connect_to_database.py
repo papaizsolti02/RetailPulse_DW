@@ -1,4 +1,6 @@
 import pyodbc
+import logging
+import utils.logger_config
 from typing import Tuple, Optional
 
 
@@ -21,7 +23,10 @@ def connect_to_database(
     Raises:
         None explicitly. Catches and prints pyodbc.Error on failure.
     """
+    logger = logging.getLogger(__name__)
+
     try:
+        logger.info("Connecting to self-hosted database!")
         conn = pyodbc.connect(
             'DRIVER={ODBC Driver 17 for SQL Server};'
             f'SERVER={server};'
@@ -30,7 +35,8 @@ def connect_to_database(
         )
         cursor = conn.cursor()
         cursor.fast_executemany = True
+        logger.info("Connection established successfully to self-hosted database!")
         return conn, cursor
     except pyodbc.Error as e:
-        print(f"[ERROR] Failed to connect to database '{database}' on server '{server}': {e}")
+        logger.error(f"Failed to connect to self-hosted database: {e}!")
         return None

@@ -10,6 +10,25 @@ def product_processing(
     connection: pyodbc.Connection,
     cursor: pyodbc.Cursor
 ) -> None:
+    """
+    Generates synthetic product data, stores it in the datalake, and processes it through the data warehouse pipeline.
+
+    Steps performed:
+    1. Generates 1,000 unique product records with attributes including name, description, color, brand, category, gender, and price.
+    2. Ensures uniqueness of each product based on a combination of brand, category, color, and gender.
+    3. Saves the generated products as a CSV file in the `datalake/raw_products.csv` path.
+    4. Calls the `ingest_and_process_products_db` function to:
+       - Truncate and ingest the raw product data.
+       - Process it into the staging area.
+       - Upsert the final version into the production `ProductsDim` table.
+
+    Parameters:
+        connection (pyodbc.Connection): Active database connection.
+        cursor (pyodbc.Cursor): Database cursor used to execute SQL commands.
+
+    Raises:
+        Logs and handles any exceptions during product generation or pipeline execution.
+    """
     try:
         logger = logging.getLogger(__name__)
 
