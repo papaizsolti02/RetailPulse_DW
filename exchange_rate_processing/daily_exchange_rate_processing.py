@@ -62,10 +62,10 @@ def daily_exchange_rate_processing(
                 except requests.RequestException as req_err:
                     logger.error(f"Failed to fetch user data from API: {req_err}!")
 
-            rate = float(rate) if rate else 0.0
+            rate = float(rate) if rate else 0
         except Exception as e:
             logger.warning(f"Failed to get rate for {currency}: {e}!")
-            rate = 0.0
+            rate = 0
 
         exchange_rate_data.append((country, currency, rate))
 
