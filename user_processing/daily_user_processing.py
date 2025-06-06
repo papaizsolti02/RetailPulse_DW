@@ -1,6 +1,8 @@
 import json
 import pyodbc
+import logging
 import requests
+import utils.logger_config
 from typing import List, Tuple
 
 
@@ -20,16 +22,17 @@ def daily_user_processing(
         None
     """
     try:
-        print("Fetching user data from external API...")
+        logger = logging.getLogger(__name__)
+        logger.info("Fetching user data from external API!")
         response = requests.get("https://randomuser.me/api/?results=5000")
         response.raise_for_status()
         users = response.json().get('results', [])
 
         if not users:
-            print("No user data retrieved from API.")
+            logger.warning("No user data retrieved from API!")
             return
 
-        print(f"Retrieved {len(users)} users.")
+        logger.info(f"Retrieved {len(users)} users!")
 
         records: List[Tuple[str, str]] = [
             (json.dumps(user), 'https://randomuser.me/api/') for user in users
@@ -40,20 +43,20 @@ def daily_user_processing(
 
         sp_call = "{CALL [raw].[IngestRawUsers] (?, ?)}"
 
-        print("Inserting raw user data into the database...")
+        logger.info("Inserting raw user data into the database!")
         cursor.executemany(sp_call, records)
         connection.commit()
+        logger.info("Raw users inserted successfully!")
 
-        print("Processing Raw Users into the staging table, processing TerritoriesDim, SubTerritoriesDim into production tables...")
+        logger.info("Processing Raw Users into the staging table, processing TerritoriesDim, SubTerritoriesDim into production tables!")
         cursor.execute("EXEC [stage].[ProcessRawUsers]")
         connection.commit()
-
-        print("User data inserted successfully.")
+        logger.info("Raw users processed successfully into production table, territores and subterritories processed!")
     except requests.RequestException as req_err:
-        print(f"Failed to fetch user data from API: {req_err}")
+        logger.error(f"Failed to fetch user data from API: {req_err}!")
     except pyodbc.Error as db_err:
-        print(f"Database error during insertion: {db_err}")
+        logger.error(f"Database error during insertion: {db_err}!")
         connection.rollback()
     except Exception as ex:
-        print(f"Unexpected error occurred: {ex}")
+        logger.error(f"Unexpected error occurred: {ex}!")
         connection.rollback()

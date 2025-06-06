@@ -1,14 +1,38 @@
 import pyodbc
 import random
+import logging
 import pandas as pd
 from faker import Faker
+import utils.logger_config
 from .ingest_and_process_products_db import ingest_and_process_products_db
 
 def product_processing(
     connection: pyodbc.Connection,
     cursor: pyodbc.Cursor
 ) -> None:
+    """
+    Generates synthetic product data, stores it in the datalake, and processes it through the data warehouse pipeline.
+
+    Steps performed:
+    1. Generates 1,000 unique product records with attributes including name, description, color, brand, category, gender, and price.
+    2. Ensures uniqueness of each product based on a combination of brand, category, color, and gender.
+    3. Saves the generated products as a CSV file in the `datalake/raw_products.csv` path.
+    4. Calls the `ingest_and_process_products_db` function to:
+       - Truncate and ingest the raw product data.
+       - Process it into the staging area.
+       - Upsert the final version into the production `ProductsDim` table.
+
+    Parameters:
+        connection (pyodbc.Connection): Active database connection.
+        cursor (pyodbc.Cursor): Database cursor used to execute SQL commands.
+
+    Raises:
+        Logs and handles any exceptions during product generation or pipeline execution.
+    """
     try:
+        logger = logging.getLogger(__name__)
+
+        logger.info("Generating products!")
         fake = Faker()
 
         brands = ["Nike", "Adidas", "Zara", "H&M", "Uniqlo", "Puma", "Levi's", "Under Armour", "Gap", "Reebok"]
@@ -52,9 +76,10 @@ def product_processing(
 
             generated_products.append(product)
 
+        logger.info("Products saved into datalake!")
         df = pd.DataFrame(generated_products)
         df.to_csv("datalake/raw_products.csv", index=False)
 
         ingest_and_process_products_db(connection, cursor, df)
     except Exception as e:
-        print(f"Error during product processing: {e}")
+        logger.error(f"Error during product processing: {e}!")
