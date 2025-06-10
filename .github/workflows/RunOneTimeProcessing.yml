@@ -20,3 +20,9 @@ jobs:
         shell: cmd
         run: |
           CALL "C:\Users\papai\anaconda3\Scripts\activate.bat" RetailPulse_DW && python ./one_time_processing.py
+
+      - name: Upload generated products CSV as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: raw-products-data
+          path: datalake/raw_products_*.csv
