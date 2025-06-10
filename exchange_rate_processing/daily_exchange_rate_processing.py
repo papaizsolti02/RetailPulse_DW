@@ -3,6 +3,8 @@ import logging
 import requests
 import pandas as pd
 import utils.logger_config
+from utils.table_projection import table_projection
+from utils.check_table_exists import check_table_exists
 
 
 def daily_exchange_rate_processing(
@@ -36,13 +38,8 @@ def daily_exchange_rate_processing(
 
     # Check if table exists
     logger.info("Check if country information table ([config].[CountryInfo]) exists!")
-    check_table_sql = """
-        SELECT 1
-        FROM INFORMATION_SCHEMA.TABLES
-        WHERE TABLE_SCHEMA = 'config' AND TABLE_NAME = 'CountryInfo';
-    """
-    cursor.execute(check_table_sql)
-    table_exists = cursor.fetchone()
+
+    table_exists = check_table_exists(connection, cursor, 'config', 'CountryInfo')
 
     if table_exists:
         logger.info("[config].[CountryInfo] already exists. Skipping ingestion!")
@@ -68,12 +65,11 @@ def daily_exchange_rate_processing(
 
     # Fetch exchange rates for those countries which have not appeared yet in the [prod].[TerritoriesDim] table
     logger.info("Fetch exchange rates for countries!")
-    cursor.execute("SELECT Country, Currency FROM utils.GetTerritoryCurrencies")
-    results = [row for row in cursor.fetchall()]
+    territory_currencies = table_projection(connection, cursor, ['Country', 'Currency'], 'utils', 'GetTerritoryCurrencies')
 
     exchange_rate_data = []
 
-    for country, currency in results:
+    for country, currency in territory_currencies:
         try:
             if currency == "EUR":
                 rate = 1

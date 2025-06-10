@@ -4,6 +4,7 @@ import logging
 import pandas as pd
 from faker import Faker
 import utils.logger_config
+from datetime import datetime
 from .ingest_and_process_products_db import ingest_and_process_products_db
 
 def product_processing(
@@ -77,8 +78,9 @@ def product_processing(
             generated_products.append(product)
 
         logger.info("Products saved into datalake!")
+        date_str = datetime.now().strftime("%Y%m%d")
         df = pd.DataFrame(generated_products)
-        df.to_csv("datalake/raw_products.csv", index=False)
+        df.to_csv(f"datalake/raw_products_{date_str}.csv", index=False)
 
         ingest_and_process_products_db(connection, cursor, df)
     except Exception as e:

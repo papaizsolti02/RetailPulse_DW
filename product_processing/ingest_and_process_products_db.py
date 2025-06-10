@@ -2,6 +2,7 @@ import pyodbc
 import logging
 import pandas as pd
 import utils.logger_config
+from utils.truncate_table import truncate_table
 
 def ingest_and_process_products_db(
     connection: pyodbc.Connection,
@@ -46,7 +47,8 @@ def ingest_and_process_products_db(
             )
             for _, row in data.iterrows()
         ]
-        cursor.execute(f"TRUNCATE TABLE [raw].[Products]")
+
+        truncate_table(connection, cursor, 'raw', 'Products')
 
         sp_call = "{CALL [raw].[IngestRawProducts] (?, ?, ?, ?, ?, ?, ?)}"
 
