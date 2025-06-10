@@ -4,6 +4,7 @@ import logging
 import requests
 import utils.logger_config
 from typing import List, Tuple
+from utils.truncate_table import truncate_table
 
 
 def daily_user_processing(
@@ -39,7 +40,7 @@ def daily_user_processing(
         ]
 
         # Truncate raw Users table
-        cursor.execute(f"TRUNCATE TABLE [raw].Users")
+        truncate_table(connection, cursor, 'raw', 'Users')
 
         sp_call = "{CALL [raw].[IngestRawUsers] (?, ?)}"
 
