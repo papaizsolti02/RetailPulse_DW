@@ -9,6 +9,22 @@ def check_table_exists(
     schema_name: str,
     table_name: str,
 ) -> bool:
+    """
+    Checks whether a given table exists in the specified schema of the connected database.
+
+    Parameters:
+        connection (pyodbc.Connection): Active database connection.
+        cursor (pyodbc.Cursor): Cursor used to execute the SQL command.
+        schema_name (str): Name of the schema where the table is expected.
+        table_name (str): Name of the table to check for existence.
+
+    Returns:
+        bool: True if the table exists, False otherwise.
+
+    Logs:
+        - Info message before checking.
+        - Error message if a database error occurs during execution.
+    """
     try:
         logger = logging.getLogger(__name__)
         logger.info(f"Checking if [{schema_name}].[{table_name}] table exists!")
