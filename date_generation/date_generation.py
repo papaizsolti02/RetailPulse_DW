@@ -10,9 +10,7 @@ def date_generation(
     try:
         logger = logging.getLogger(__name__)
 
-        logger.info("Check if date dimension [prod].[DateDim] already exists")
         table_exists = check_table_exists(connection, cursor, 'prod', 'DateDim')
-
         if table_exists:
             logger.info("[prod].[DateDim] already exists. Skipping generation!")
         else:
