@@ -4,6 +4,8 @@ BEGIN
     SET NOCOUNT ON;
 
     BEGIN TRY
+        TRUNCATE TABLE [stage].[Transactions];
+
         DECLARE
             @TransactionId INT,
             @TransactionJson NVARCHAR(MAX),
