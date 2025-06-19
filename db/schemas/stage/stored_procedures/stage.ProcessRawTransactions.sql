@@ -4,7 +4,7 @@ BEGIN
     SET NOCOUNT ON;
 
     BEGIN TRY
-        TRUNCATE TABLE [stage].[Transactions];
+		TRUNCATE TABLE [stage].[Transactions];
 
         DECLARE
             @TransactionId INT,
@@ -39,8 +39,21 @@ BEGIN
         OPEN TransactionCursor;
         FETCH NEXT FROM TransactionCursor INTO @TransactionId, @TransactionJson, @InsertedAt;
 
+		SET @TransactionDateStr = FORMAT(@TransactionDate, 'yyyyMMdd');
+
+		SELECT @NextSequence = ISNULL(MAX(CAST(RIGHT(TransactionBK, 5) AS INT)), 0)
+		FROM prod.TransactionsFact
+		WHERE TransactionBK LIKE CONCAT('ORD', @TransactionDateStr, '%');
+
+		DECLARE @CartItems TABLE (
+            ProductName NVARCHAR(255),
+            ProductLocalPrice DECIMAL(18,2)
+        );
+
         WHILE @@FETCH_STATUS = 0
         BEGIN
+			DELETE FROM @CartItems;
+
             SET @CartLocalTotal = 0;
             SET @CartStandardizedTotal = 0;
 
@@ -103,27 +116,9 @@ BEGIN
                 CONTINUE;
             END
 
-            SET @TransactionDateStr = FORMAT(@TransactionDate, 'yyyyMMdd');
+			SET @NextSequence += 1;
 
-            IF @NextSequence IS NULL OR @TransactionDateStr <> LEFT(@TransactionBK, 11)
-            BEGIN
-                SELECT @NextSequence = ISNULL(MAX(CAST(RIGHT(TransactionBK, 5) AS INT)), 0)
-                FROM stage.Transactions
-                WHERE TransactionBK LIKE CONCAT('ORD', @TransactionDateStr, '%');
-
-                SET @NextSequence += 1;
-            END
-            ELSE
-            BEGIN
-                SET @NextSequence += 1;
-            END
-
-            SET @TransactionBK = CONCAT('ORD', @TransactionDateStr, '-', RIGHT('00000' + CAST(@NextSequence AS NVARCHAR(5)), 5));
-
-            DECLARE @CartItems TABLE (
-                ProductName NVARCHAR(255),
-                ProductLocalPrice DECIMAL(18,2)
-            );
+			SET @TransactionBK = CONCAT('ORD', @TransactionDateStr, '-', RIGHT('00000' + CAST(@NextSequence AS NVARCHAR(5)), 5));
 
             INSERT INTO @CartItems(ProductName, ProductLocalPrice)
             SELECT
@@ -143,7 +138,7 @@ BEGIN
             BEGIN
                 SELECT @ProductId = ProductId
                 FROM prod.ProductsDim
-                WHERE Name = @ProductName AND IsCurrent = 1;
+                WHERE Name = @ProductName AND @ProductLocalPrice = Price AND IsCurrent = 1;
 
                 IF @ProductId IS NULL
                 BEGIN
