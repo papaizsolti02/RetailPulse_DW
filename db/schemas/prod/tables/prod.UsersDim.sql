@@ -6,7 +6,7 @@ CREATE TABLE [prod].[UsersDim](
 	[FirstName] [nvarchar](100) NOT NULL,
 	[LastName] [nvarchar](100) NOT NULL,
 	[Email] [nvarchar](320) NOT NULL,
-	[TerritoryId] [int] NOT NULL,
+	[SubTerritoryId] [int] NOT NULL,
 	[BUSINESSKEYHASH] [varbinary](6000) NULL,
 	[HASHDATA] [varchar](MAX) NULL,
 	[EffectiveDate] [datetime] NOT NULL,
@@ -25,9 +25,9 @@ GO
 ALTER TABLE [prod].[UsersDim] ADD  DEFAULT ((1)) FOR [IsCurrent]
 GO
 
-ALTER TABLE [prod].[UsersDim]  WITH CHECK ADD  CONSTRAINT [FK_UsersDim_Territories] FOREIGN KEY([TerritoryId])
-REFERENCES [prod].[TerritoriesDim] ([TerritoryId])
+ALTER TABLE [prod].[UsersDim]  WITH CHECK ADD  CONSTRAINT [FK_UsersDim_SubTerritories] FOREIGN KEY([SubTerritoryId])
+REFERENCES [prod].[SubTerritoriesDim] ([SubTerritoryId])
 GO
 
-ALTER TABLE [prod].[UsersDim] CHECK CONSTRAINT [FK_UsersDim_Territories]
+ALTER TABLE [prod].[UsersDim] CHECK CONSTRAINT [FK_UsersDim_SubTerritories]
 GO

@@ -84,7 +84,7 @@ BEGIN
 
         -- Final user load
         INSERT INTO stage.Users (
-            Source, Gender, FullName, FirstName, LastName, Email, InsertedAt, TerritoryId
+            Source, Gender, FullName, FirstName, LastName, Email, InsertedAt, SubTerritoryId
         )
         SELECT
             pu.Source,
@@ -94,7 +94,7 @@ BEGIN
             pu.LastName,
             pu.Email,
             pu.InsertedAt,
-            t.TerritoryId
+            st.SubTerritoryId
         FROM #ParsedUsers pu
         INNER JOIN stage.Territories t
             ON pu.Country = t.Country AND pu.State = t.State

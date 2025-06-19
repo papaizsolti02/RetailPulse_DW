@@ -1,5 +1,6 @@
 import json
 import pyodbc
+import random
 import logging
 import requests
 import utils.logger_config
@@ -24,8 +25,11 @@ def daily_user_processing(
     """
     try:
         logger = logging.getLogger(__name__)
+
+        num_users = random.randint(100, 500)
+
         logger.info("Fetching user data from external API!")
-        response = requests.get("https://randomuser.me/api/?results=5000")
+        response = requests.get(f"https://randomuser.me/api/?results={num_users}")
         response.raise_for_status()
         users = response.json().get('results', [])
 

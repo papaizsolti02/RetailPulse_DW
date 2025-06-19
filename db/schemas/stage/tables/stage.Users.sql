@@ -7,7 +7,7 @@ CREATE TABLE [stage].[Users](
 	[LastName] [nvarchar](100) NOT NULL,
 	[Email] [nvarchar](320) NOT NULL,
 	[InsertedAt] [datetime] NOT NULL,
-	[TerritoryId] [int] NOT NULL,
+	[SubTerritoryId] [int] NOT NULL,
 	[BUSINESSKEYHASH] [varbinary](6000) NULL,
 	[HASHDATA] [varchar](MAX) NULL,
 PRIMARY KEY CLUSTERED
@@ -23,9 +23,9 @@ GO
 ALTER TABLE [stage].[Users] ADD  DEFAULT (getdate()) FOR [InsertedAt]
 GO
 
-ALTER TABLE [stage].[Users]  WITH CHECK ADD  CONSTRAINT [FK_StageUsers_Territories] FOREIGN KEY([TerritoryId])
-REFERENCES [stage].[Territories] ([TerritoryId])
+ALTER TABLE [stage].[Users]  WITH CHECK ADD  CONSTRAINT [FK_StageUsers_SubTerritories] FOREIGN KEY([SubTerritoryId])
+REFERENCES [stage].[SubTerritories] ([SubTerritoryId])
 GO
 
-ALTER TABLE [stage].[Users] CHECK CONSTRAINT [FK_StageUsers_Territories]
+ALTER TABLE [stage].[Users] CHECK CONSTRAINT [FK_StageUsers_SubTerritories]
 GO
