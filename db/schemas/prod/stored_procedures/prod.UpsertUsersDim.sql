@@ -1,4 +1,4 @@
-CREATE PROCEDURE prod.UpsertUsersDim
+CREATE PROCEDURE [prod].[UpsertUsersDim]
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -8,31 +8,35 @@ BEGIN
 
         -- Materialize the CTE as a temp table
         IF OBJECT_ID('tempdb..#UsersWithProdTerritory') IS NOT NULL
-            DROP TABLE #UsersWithProdTerritory;
+            DROP TABLE #UsersWithProdSubTerritory;
 
         SELECT
             su.*,
-            td.TerritoryId AS ProdTerritoryId
-        INTO #UsersWithProdTerritory
+            std.SubTerritoryId AS ProdSubTerritoryId
+        INTO #UsersWithProdSubTerritory
         FROM
             stage.Users su
-        INNER JOIN stage.Territories st
-            ON su.TerritoryId = st.TerritoryId
-        INNER JOIN prod.TerritoriesDim td
-            ON st.Country = td.Country
-            AND st.State = td.State;
+        INNER JOIN stage.SubTerritories st
+            ON su.SubTerritoryId = st.SubTerritoryId
+		INNER JOIN prod.SubTerritoriesDim std
+			ON st.City = std.City
+			AND st.StreetName = std.StreetName
+			AND st.Latitude = std.Latitude
+			AND st.Longitude = std.Longitude
 
+		-- Step 1: Expire old records where Email has changed
         UPDATE d
         SET
             d.ExpirationDate = s.InsertedAt,
             d.IsCurrent = 0
         FROM prod.UsersDim d
-        INNER JOIN #UsersWithProdTerritory s
+        INNER JOIN #UsersWithProdSubTerritory s
 			ON d.BUSINESSKEYHASH = s.BUSINESSKEYHASH
         WHERE
             d.IsCurrent = 1
             AND ISNULL(d.Email, '') <> ISNULL(s.Email, '');
 
+        -- Step 2: Insert new or changed records
         INSERT INTO prod.UsersDim (
             Source,
 			Gender,
@@ -40,7 +44,7 @@ BEGIN
 			FirstName,
 			LastName,
 			Email,
-			TerritoryId,
+			SubTerritoryId,
             BUSINESSKEYHASH,
 			HASHDATA,
             EffectiveDate,
@@ -54,13 +58,13 @@ BEGIN
             s.FirstName,
             s.LastName,
             s.Email,
-            s.ProdTerritoryId,
+            s.ProdSubTerritoryId,
             s.BUSINESSKEYHASH,
             s.HASHDATA,
             s.InsertedAt AS EffectiveDate,
             '9999-12-31' AS ExpirationDate,
             1 AS IsCurrent
-        FROM #UsersWithProdTerritory s
+        FROM #UsersWithProdSubTerritory s
         LEFT JOIN prod.UsersDim d
             ON s.BUSINESSKEYHASH = d.BUSINESSKEYHASH
 			AND d.IsCurrent = 1
@@ -80,3 +84,4 @@ BEGIN
         RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState);
     END CATCH
 END;
+GO
