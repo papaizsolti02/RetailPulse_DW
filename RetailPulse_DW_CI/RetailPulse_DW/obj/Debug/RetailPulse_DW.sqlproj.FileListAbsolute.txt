@@ -1,6 +1,0 @@
-C:\Users\papai\OneDrive\Desktop\RetailPulse_DW\RetailPulse_DW_CI\Database1\bin\Debug\RetailPulse_DW.dacpac
-C:\Users\papai\OneDrive\Desktop\RetailPulse_DW\RetailPulse_DW_CI\Database1\bin\Debug\Database1.dll
-C:\Users\papai\OneDrive\Desktop\RetailPulse_DW\RetailPulse_DW_CI\Database1\bin\Debug\Database1.pdb
-C:\Users\papai\OneDrive\Desktop\RetailPulse_DW\RetailPulse_DW_CI\Database1\obj\Debug\RetailPulse_DW.sqlproj.AssemblyReference.cache
-C:\Users\papai\OneDrive\Desktop\RetailPulse_DW\RetailPulse_DW_CI\Database1\obj\Debug\Database1.dll
-C:\Users\papai\OneDrive\Desktop\RetailPulse_DW\RetailPulse_DW_CI\Database1\obj\Debug\Database1.pdb
