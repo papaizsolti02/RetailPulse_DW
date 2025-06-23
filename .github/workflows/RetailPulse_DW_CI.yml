@@ -10,6 +10,7 @@ jobs:
     env:
       SQL_SERVER: ${{ secrets.SQL_SERVER }}
       SQL_DATABASE: ${{ secrets.SQL_DATABASE }}
+      DACPAC_PATH: ${{ secrets.DACPAC_PATH }}
 
     steps:
       - name: Checkout repository
@@ -29,7 +30,7 @@ jobs:
       - name: Publish DACPAC using sqlpackage
         shell: powershell
         run: |
-          $dacpacPath = "RetailPulse_DW_CI\RetailPulse_DW\bin\Release\RetailPulse_DW.dacpac"
+          $dacpacPath = "${{ env.DACPAC_PATH }}"
           if (-Not (Test-Path $dacpacPath)) {
             Write-Error "DACPAC file not found at $dacpacPath"
             exit 1
