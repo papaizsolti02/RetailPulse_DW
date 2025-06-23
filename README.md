@@ -254,6 +254,85 @@ Load staged data into production fact table.
 
 Simulates daily transactions → raw JSON → staging detail → production fact. Supports multi-currency and referential integrity.
 
-## Architecture Diagram
+## 🏗️ Architecture Diagram
 
 ![RetailPulse Data Warehouse Architecture](./images/architecture_diagram.png)
+
+## ⚙️ Utility Stored Procedures & Tables Documentation
+
+### 🔐 Procedure: `config.HashTableEntries`
+
+**Purpose:**
+Generates hash values for rows in a dataset's processing table to enable efficient change detection.
+
+**Inputs:**
+- `@DataSourceID INT`: Identifier of the dataset.
+
+**Process:**
+- Retrieves the processing table name from `config.Datasets` based on `@DataSourceID`.
+- Reads the ordered list of hash column expressions from `config.HashColumns` for the dataset.
+- Concatenates these column values into a single string (`HASHDATA`).
+- Creates a SHA2-512 hash (`BUSINESSKEYHASH`) from this concatenated string.
+- Updates the processing table with these hash values.
+
+**Error Handling:**
+Raises errors if dataset or hash columns are missing, or on any execution error.
+
+---
+
+### 🗂️ Table: `config.HashColumns`
+
+| Column      | Type         | Description                                   |
+|-------------|--------------|-----------------------------------------------|
+| Id          | INT (PK)     | Identity primary key                          |
+| DatasetId   | INT          | FK to `config.Datasets`                       |
+| ColumnName  | NVARCHAR(255)| Name of the column to hash                    |
+| HashString  | NVARCHAR(255)| Expression/string used for concatenation     |
+| HashOrder   | INT          | Order of columns when concatenating for hash |
+
+---
+
+### 🌍 Procedure: `config.IngestCountryInfo`
+
+**Purpose:**
+Ingests country and currency metadata into the `config.CountryInfo` table.
+
+**Inputs:**
+- `@CountryName NVARCHAR(255)`
+- `@Currency NVARCHAR(10)`
+- `@CurrencySymbol NVARCHAR(100)`
+
+**Process:**
+- Creates the `config.CountryInfo` table if it does not exist.
+- Inserts a new record with the country name, currency code, and currency symbol.
+
+---
+
+### 🏷️ Table: `config.CountryInfo`
+
+| Column         | Type          | Description                      |
+|----------------|---------------|----------------------------------|
+| Id             | INT (PK)      | Identity primary key             |
+| CountryName    | NVARCHAR(255) | Name of the country             |
+| Currency       | NVARCHAR(10)  | Currency code (e.g., EUR, USD)  |
+| CurrencySymbol | NVARCHAR(100) | Currency symbol (e.g., €, $)    |
+| InsertedAt     | DATETIME      | Timestamp when inserted          |
+
+---
+
+### 📊 Table: `config.Datasets`
+
+| Column          | Type          | Description                              |
+|-----------------|---------------|------------------------------------------|
+| Id              | INT (PK)      | Identity primary key                     |
+| Dataset         | NVARCHAR(100) | Name of the dataset                      |
+| DatasetSource   | NVARCHAR(255) | Source description or location          |
+| SourceRefreshType | NVARCHAR(50) | Type of refresh (e.g., daily, incremental) |
+| LoadTable       | NVARCHAR(255) | Raw data load table                      |
+| ProcessingTable | NVARCHAR(255) | Intermediate processing table            |
+| FinalTable      | NVARCHAR(255) | Final destination table                   |
+| CreatedAt       | DATETIME      | Record creation timestamp                 |
+
+This table stores metadata about each dataset used in the system. It tracks where the data originates, how often it is refreshed, and the specific tables involved at different stages of the ETL process: raw loading, processing, and final output. This enables flexible management and automation of data workflows.
+
+![Datasets Listed](./images/datasets_listed.png)
