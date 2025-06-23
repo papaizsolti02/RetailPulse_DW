@@ -25,7 +25,7 @@ jobs:
       - name: Verify DACPAC file exists
         shell: cmd
         run: |
-          dir RetailPulse_DW_CI\RetailPulse_DW\bin\Release
+          dir RetailPulse_DW_CI\RetailPulse_DW\bin\Output
 
       - name: Publish DACPAC using sqlpackage
         shell: powershell
@@ -38,5 +38,5 @@ jobs:
           sqlpackage /Action:Publish `
             /SourceFile:$dacpacPath `
             /TargetServerName:"${{ env.SQL_SERVER }}" `
-            /TargetDatabaseName:"${{ env.SQL_DATABASE }}" `
+            /TargetDatabaseName:"test" `
             /TargetTrustServerCertificate:true
