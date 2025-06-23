@@ -1,6 +1,6 @@
 # 📊 RetailPulse_DW
 
-**RetailPulse_DW** is a robust and modular data warehouse pipeline built for processing and analyzing e-commerce data. It extracts data from multiple sources and processes them accordingly:
+**RetailPulse_DW** is a robust and modular data warehouse pipeline built for processing and analyzing e-commerce data. It extracts data from multiple sources and processes them accordingly
 
 ### 🧺 Product Data Generation and Ingestion
 
@@ -253,3 +253,7 @@ Load staged data into production fact table.
 - Includes error handling.
 
 Simulates daily transactions → raw JSON → staging detail → production fact. Supports multi-currency and referential integrity.
+
+## Architecture Diagram
+
+![RetailPulse Data Warehouse Architecture](./images/architecture_diagram.png)
