@@ -1,7 +1,7 @@
 name: Build and Deploy DACPAC for RetailPulse_DW
 
 on:
-  workflow_dispatch:  # Manual trigger
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -10,21 +10,31 @@ jobs:
     env:
       SQL_SERVER: ${{ secrets.SQL_SERVER }}
       SQL_DATABASE: ${{ secrets.SQL_DATABASE }}
+      DACPAC_PATH: ${{ secrets.DACPAC_PATH }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup MSBuild (Visual Studio build environment)
-        uses: microsoft/setup-msbuild@v1
+      - name: Run sqlfluff lint
+        run: |
+          sqlfluff lint RetailPulse_DW_CI/RetailPulse_DW/ --config .sqlfluff
 
-      - name: Build DACPAC project
-        run: msbuild RetailPulse_DW_CI\RetailPulse_DW.csproj /p:Configuration=Release /p:Platform="Any CPU"
-      
+      - name: Build DACPAC project using Developer Command Prompt
+        shell: cmd
+        run: |
+          CALL "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat" && ^
+          msbuild RetailPulse_DW_CI\RetailPulse_DW\RetailPulse_DW.sqlproj /p:Configuration=Release /p:Platform="Any CPU"
+
+      - name: Verify DACPAC file exists
+        shell: cmd
+        run: |
+          dir RetailPulse_DW_CI\RetailPulse_DW\bin\Output
+
       - name: Publish DACPAC using sqlpackage
         shell: powershell
         run: |
-          $dacpacPath = "RetailPulse_DW_CI\RetailPulse_DW\bin\Release\RetailPulse_DW.dacpac"
+          $dacpacPath = "${{ env.DACPAC_PATH }}"
           if (-Not (Test-Path $dacpacPath)) {
             Write-Error "DACPAC file not found at $dacpacPath"
             exit 1
@@ -33,5 +43,4 @@ jobs:
             /SourceFile:$dacpacPath `
             /TargetServerName:"${{ env.SQL_SERVER }}" `
             /TargetDatabaseName:"${{ env.SQL_DATABASE }}" `
-            /TargetIntegratedSecurity:true `
             /TargetTrustServerCertificate:true

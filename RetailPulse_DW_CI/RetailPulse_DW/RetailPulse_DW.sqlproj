@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>RetailPulse_DW</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{40207086-9f98-41d1-b6ab-c5e851cb7705}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>Database1</RootNamespace>
+    <AssemblyName>Database1</AssemblyName>
+    <ModelCollation>1033,CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <DefaultCollation>SQL_Latin1_General_CP1_CI_AS</DefaultCollation>
+    <DefaultFilegroup>PRIMARY</DefaultFilegroup>
+    <GenerateCreateScript>False</GenerateCreateScript>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Output\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Output\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="prod\" />
+    <Folder Include="prod\Tables\" />
+    <Folder Include="stage\" />
+    <Folder Include="stage\Tables\" />
+    <Folder Include="raw\" />
+    <Folder Include="raw\Tables\" />
+    <Folder Include="config\" />
+    <Folder Include="config\Tables\" />
+    <Folder Include="utils\" />
+    <Folder Include="utils\Views\" />
+    <Folder Include="stage\Stored Procedures\" />
+    <Folder Include="prod\Stored Procedures\" />
+    <Folder Include="raw\Stored Procedures\" />
+    <Folder Include="config\Stored Procedures\" />
+    <Folder Include="Security\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="prod\Tables\ProductsDim.sql" />
+    <Build Include="stage\Tables\Users.sql" />
+    <Build Include="stage\Tables\Territories.sql" />
+    <Build Include="stage\Tables\SubTerritories.sql" />
+    <Build Include="raw\Tables\Transactions.sql" />
+    <Build Include="raw\Tables\Users.sql" />
+    <Build Include="config\Tables\Datasets.sql" />
+    <Build Include="config\Tables\HashColumns.sql" />
+    <Build Include="prod\Tables\DateDim.sql" />
+    <Build Include="prod\Tables\ExchangeRatesDim.sql" />
+    <Build Include="config\Tables\CountryInfo.sql" />
+    <Build Include="prod\Tables\TerritoriesDim.sql" />
+    <Build Include="prod\Tables\SubTerritoriesDim.sql" />
+    <Build Include="prod\Tables\UsersDim.sql" />
+    <Build Include="prod\Tables\TransactionsFact.sql" />
+    <Build Include="stage\Tables\Transactions.sql" />
+    <Build Include="raw\Tables\Products.sql" />
+    <Build Include="stage\Tables\Products.sql" />
+    <Build Include="utils\Views\GetTerritoryCurrencies.sql" />
+    <Build Include="stage\Stored Procedures\ProcessRawProducts.sql" />
+    <Build Include="prod\Stored Procedures\UpsertProductsDim.sql" />
+    <Build Include="stage\Stored Procedures\ProcessRawUsers.sql" />
+    <Build Include="stage\Stored Procedures\ProcessTerritories.sql" />
+    <Build Include="stage\Stored Procedures\ProcessSubTerritories.sql" />
+    <Build Include="prod\Stored Procedures\MergeTerritoriesDim.sql" />
+    <Build Include="prod\Stored Procedures\MergeSubTerritoriesDim.sql" />
+    <Build Include="raw\Stored Procedures\IngestRawTransactions.sql" />
+    <Build Include="stage\Stored Procedures\ProcessRawTransactions.sql" />
+    <Build Include="raw\Stored Procedures\IngestRawUsers.sql" />
+    <Build Include="prod\Stored Procedures\UpsertUsersDim.sql" />
+    <Build Include="config\Stored Procedures\HashTableEntries.sql" />
+    <Build Include="prod\Stored Procedures\GenerateDateDim.sql" />
+    <Build Include="prod\Stored Procedures\InsertTransactionsFact.sql" />
+    <Build Include="config\Stored Procedures\IngestCountryInfo.sql" />
+    <Build Include="prod\Stored Procedures\UpsertExchangeRate.sql" />
+    <Build Include="raw\Stored Procedures\IngestRawProducts.sql" />
+    <Build Include="Security\config.sql" />
+    <Build Include="Security\prod.sql" />
+    <Build Include="Security\raw.sql" />
+    <Build Include="Security\stage.sql" />
+    <Build Include="Security\utils.sql" />
+  </ItemGroup>
+</Project>
