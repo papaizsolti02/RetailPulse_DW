@@ -26,8 +26,8 @@ BEGIN
             State NVARCHAR(100),
             City NVARCHAR(100),
             StreetName NVARCHAR(255),
-            Latitude DECIMAL(9,6) NULL,
-            Longitude DECIMAL(9,6) NULL,
+            Latitude DECIMAL(9, 6) NULL,
+            Longitude DECIMAL(9, 6) NULL,
             InsertedAt DATETIME
         );
 
@@ -50,11 +50,11 @@ BEGIN
             JSON_VALUE(u.UserJson, '$.location.state'),
             JSON_VALUE(u.UserJson, '$.location.city'),
             JSON_VALUE(u.UserJson, '$.location.street.name'),
-            TRY_CAST(JSON_VALUE(u.UserJson, '$.location.coordinates.latitude') AS DECIMAL(9,6)),
-            TRY_CAST(JSON_VALUE(u.UserJson, '$.location.coordinates.longitude') AS DECIMAL(9,6)),
+            TRY_CAST(JSON_VALUE(u.UserJson, '$.location.coordinates.latitude') AS DECIMAL(9, 6)),
+            TRY_CAST(JSON_VALUE(u.UserJson, '$.location.coordinates.longitude') AS DECIMAL(9, 6)),
             u.InsertedAt
         FROM raw.Users u
-        WHERE 
+        WHERE
             ISNULL(JSON_VALUE(u.UserJson, '$.name.first'), '') COLLATE Latin1_General_BIN NOT LIKE '%[^ -~]%' AND
             ISNULL(JSON_VALUE(u.UserJson, '$.name.last'), '') COLLATE Latin1_General_BIN NOT LIKE '%[^ -~]%' AND
             ISNULL(JSON_VALUE(u.UserJson, '$.location.city'), '') COLLATE Latin1_General_BIN NOT LIKE '%[^ -~]%' AND
@@ -71,7 +71,7 @@ BEGIN
 
         IF @TerritorySuccess = 0
         BEGIN
-            RAISERROR(@TerritoryError, 16, 1);
+            RAISERROR (@TerritoryError, 16, 1);
         END
 
         -- Process SubTerritories
@@ -81,7 +81,7 @@ BEGIN
 
         IF @SubTerritorySuccess = 0
         BEGIN
-            RAISERROR(@SubTerritoryError, 16, 1);
+            RAISERROR (@SubTerritoryError, 16, 1);
         END
 
         -- Final user load

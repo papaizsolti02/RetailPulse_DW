@@ -10,7 +10,7 @@ BEGIN
         IF OBJECT_ID('[stage].[Products]', 'U') IS NULL
         BEGIN
             CREATE TABLE [stage].[Products] (
-                ProductId INT IDENTITY(1,1) PRIMARY KEY,
+                ProductId INT IDENTITY (1, 1) PRIMARY KEY,
                 Name NVARCHAR(255) NOT NULL,
                 Description NVARCHAR(MAX) NULL,
                 Color NVARCHAR(50) NULL,
@@ -46,11 +46,11 @@ BEGIN
 			r.Category,
 			r.Gender,
 			r.Price
-		FROM 
+		FROM
 			[raw].[Products] r
 		WHERE NOT EXISTS (
 			SELECT 1
-			FROM 
+			FROM
 				[stage].[Products] s
 			WHERE s.Name = r.Name
 				AND s.Brand = r.Brand

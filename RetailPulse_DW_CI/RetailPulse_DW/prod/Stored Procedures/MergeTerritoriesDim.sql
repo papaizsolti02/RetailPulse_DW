@@ -1,4 +1,4 @@
-﻿CREATE   PROCEDURE [prod].[MergeTerritoriesDim]
+﻿CREATE PROCEDURE [prod].[MergeTerritoriesDim]
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -29,6 +29,6 @@ BEGIN
         DECLARE @ErrorSeverity INT = ERROR_SEVERITY();
         DECLARE @ErrorState INT = ERROR_STATE();
 
-        RAISERROR(@ErrorMessage, @ErrorSeverity, @ErrorState);
+        RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState);
     END CATCH
 END;

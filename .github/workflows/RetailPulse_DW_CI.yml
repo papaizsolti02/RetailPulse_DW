@@ -16,6 +16,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Run sqlfluff lint
+        run: |
+          sqlfluff lint RetailPulse_DW_CI/RetailPulse_DW/ --config .sqlfluff
+
       - name: Build DACPAC project using Developer Command Prompt
         shell: cmd
         run: |

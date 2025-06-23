@@ -1,4 +1,4 @@
-﻿CREATE   PROCEDURE [prod].[MergeSubTerritoriesDim]
+﻿CREATE PROCEDURE [prod].[MergeSubTerritoriesDim]
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -8,7 +8,7 @@ BEGIN
 
         MERGE INTO prod.SubTerritoriesDim AS target
         USING (
-            SELECT 
+            SELECT
                 b.TerritoryId,
                 a.City,
                 a.StreetName,
@@ -39,6 +39,6 @@ BEGIN
         DECLARE @ErrorSeverity INT = ERROR_SEVERITY();
         DECLARE @ErrorState INT = ERROR_STATE();
 
-        RAISERROR(@ErrorMessage, @ErrorSeverity, @ErrorState);
+        RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState);
     END CATCH
 END;

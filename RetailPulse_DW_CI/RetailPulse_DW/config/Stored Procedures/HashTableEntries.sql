@@ -1,11 +1,11 @@
-﻿CREATE   PROCEDURE config.HashTableEntries
+﻿CREATE PROCEDURE config.HashTableEntries
     @DataSourceID INT
 AS
 BEGIN
     SET NOCOUNT ON;
 
     BEGIN TRY
-        
+
         DECLARE @sqlHashData NVARCHAR(MAX);
         DECLARE @HashString NVARCHAR(MAX);
 
@@ -14,7 +14,7 @@ BEGIN
 
         IF @TableAndSchema IS NULL
         BEGIN
-            RAISERROR('No processing table found for DataSourceID %d.', 16, 1, @DataSourceID);
+            RAISERROR ('No processing table found for DataSourceID %d.', 16, 1, @DataSourceID);
             RETURN;
         END;
 
@@ -30,7 +30,7 @@ BEGIN
 
         IF @HashString IS NULL
         BEGIN
-            RAISERROR('No hash columns found for DataSourceID %d.', 16, 1, @DataSourceID);
+            RAISERROR ('No hash columns found for DataSourceID %d.', 16, 1, @DataSourceID);
             RETURN;
         END
 
@@ -52,6 +52,6 @@ BEGIN
         DECLARE @ErrorSeverity INT = ERROR_SEVERITY();
         DECLARE @ErrorState INT = ERROR_STATE();
 
-        RAISERROR('Error in config.HashTableEntries: %s', @ErrorSeverity, @ErrorState, @ErrorMessage);
+        RAISERROR ('Error in config.HashTableEntries: %s', @ErrorSeverity, @ErrorState, @ErrorMessage);
     END CATCH
 END;

@@ -1,4 +1,4 @@
-﻿CREATE   PROCEDURE [raw].[IngestRawProducts]
+﻿CREATE PROCEDURE [raw].[IngestRawProducts]
     @Name NVARCHAR(255),
     @Description NVARCHAR(MAX),
     @Color NVARCHAR(50),
@@ -13,7 +13,7 @@ BEGIN
     IF OBJECT_ID('[raw].[Products]', 'U') IS NULL
     BEGIN
         CREATE TABLE [raw].[Products] (
-            ProductId INT IDENTITY(1,1) PRIMARY KEY,
+            ProductId INT IDENTITY (1, 1) PRIMARY KEY,
             Name NVARCHAR(255) NOT NULL,
             Description NVARCHAR(MAX) NULL,
             Color NVARCHAR(50) NULL,

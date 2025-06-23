@@ -11,11 +11,11 @@ BEGIN
         IF OBJECT_ID('tempdb..#UsersWithProdTerritory') IS NOT NULL
             DROP TABLE #UsersWithProdSubTerritory;
 
-        SELECT 
+        SELECT
             su.*,
             std.SubTerritoryId AS ProdSubTerritoryId
         INTO #UsersWithProdSubTerritory
-        FROM 
+        FROM
             stage.Users su
         INNER JOIN stage.SubTerritories st
             ON su.SubTerritoryId = st.SubTerritoryId
@@ -24,22 +24,22 @@ BEGIN
 			AND st.StreetName = std.StreetName
 			AND st.Latitude = std.Latitude
 			AND st.Longitude = std.Longitude
-		
+
 		-- Step 1: Expire old records where Email has changed
         UPDATE d
-        SET 
+        SET
             d.ExpirationDate = s.InsertedAt,
             d.IsCurrent = 0
         FROM prod.UsersDim d
-        INNER JOIN #UsersWithProdSubTerritory s 
+        INNER JOIN #UsersWithProdSubTerritory s
 			ON d.BUSINESSKEYHASH = s.BUSINESSKEYHASH
-        WHERE 
+        WHERE
             d.IsCurrent = 1
             AND ISNULL(d.Email, '') <> ISNULL(s.Email, '');
 
         -- Step 2: Insert new or changed records
         INSERT INTO prod.UsersDim (
-            Source, 
+            Source,
 			Gender,
 			FullName,
 			FirstName,
@@ -52,7 +52,7 @@ BEGIN
 			ExpirationDate,
 			IsCurrent
         )
-        SELECT 
+        SELECT
             s.Source,
             s.Gender,
             s.FullName,
@@ -67,10 +67,10 @@ BEGIN
             1 AS IsCurrent
         FROM #UsersWithProdSubTerritory s
         LEFT JOIN prod.UsersDim d
-            ON s.BUSINESSKEYHASH = d.BUSINESSKEYHASH 
+            ON s.BUSINESSKEYHASH = d.BUSINESSKEYHASH
 			AND d.IsCurrent = 1
-        WHERE 
-            d.UserId IS NULL 
+        WHERE
+            d.UserId IS NULL
 			OR ISNULL(d.Email, '') <> ISNULL(s.Email, '');
 
         COMMIT TRANSACTION;

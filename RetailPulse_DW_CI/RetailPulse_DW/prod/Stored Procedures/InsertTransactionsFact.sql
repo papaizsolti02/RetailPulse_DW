@@ -1,4 +1,4 @@
-﻿CREATE   PROCEDURE prod.InsertTransactionsFact
+﻿CREATE PROCEDURE prod.InsertTransactionsFact
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -11,7 +11,7 @@ BEGIN
             WHERE TABLE_SCHEMA = 'prod' AND TABLE_NAME = 'TransactionsFact'
         )
         BEGIN
-            EXEC('
+            EXEC ('
                 CREATE TABLE prod.TransactionsFact (
                     TransactionId INT IDENTITY(1,1) PRIMARY KEY,
                     TransactionBK NVARCHAR(50) NOT NULL,
@@ -65,6 +65,6 @@ BEGIN
     END TRY
     BEGIN CATCH
         DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
-        RAISERROR('Error in InsertTransactionsFact: %s', 16, 1, @ErrorMessage);
+        RAISERROR ('Error in InsertTransactionsFact: %s', 16, 1, @ErrorMessage);
     END CATCH
 END;

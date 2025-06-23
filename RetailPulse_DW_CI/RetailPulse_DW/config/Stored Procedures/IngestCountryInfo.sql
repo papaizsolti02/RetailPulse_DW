@@ -10,7 +10,7 @@ BEGIN
     BEGIN
         CREATE TABLE [config].[CountryInfo]
 		(
-			Id INT IDENTITY(1,1) PRIMARY KEY,
+			Id INT IDENTITY (1, 1) PRIMARY KEY,
 			CountryName NVARCHAR(255),
 			Currency NVARCHAR(10),
 			CurrencySymbol NVARCHAR(10),

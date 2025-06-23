@@ -1,4 +1,4 @@
-﻿CREATE   PROCEDURE [stage].[ProcessRawTransactions]
+﻿CREATE PROCEDURE [stage].[ProcessRawTransactions]
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -6,7 +6,7 @@ BEGIN
     BEGIN TRY
 		TRUNCATE TABLE [stage].[Transactions];
 
-        DECLARE 
+        DECLARE
             @TransactionId INT,
             @TransactionJson NVARCHAR(MAX),
             @InsertedAt DATETIME,
@@ -16,16 +16,16 @@ BEGIN
             @Cart NVARCHAR(MAX),
 
             @ProductName NVARCHAR(255),
-            @ProductLocalPrice DECIMAL(18,2),
+            @ProductLocalPrice DECIMAL(18, 2),
             @UserId INT,
             @ProductId INT,
             @CurrencyCode NVARCHAR(10),
-            @ExchangeRateToEUR DECIMAL(18,6),
+            @ExchangeRateToEUR DECIMAL(18, 6),
             @ExchangeRateId INT,
             @DateKey INT,
 
-            @CartLocalTotal DECIMAL(18,2),
-            @CartStandardizedTotal DECIMAL(18,2),
+            @CartLocalTotal DECIMAL(18, 2),
+            @CartStandardizedTotal DECIMAL(18, 2),
 
             @TransactionBK NVARCHAR(50),
             @TransactionDateStr NVARCHAR(8),
@@ -47,7 +47,7 @@ BEGIN
 
 		DECLARE @CartItems TABLE (
             ProductName NVARCHAR(255),
-            ProductLocalPrice DECIMAL(18,2)
+            ProductLocalPrice DECIMAL(18, 2)
         );
 
         WHILE @@FETCH_STATUS = 0
@@ -93,7 +93,7 @@ BEGIN
             END
 
             -- Get latest exchange rate info
-            SELECT TOP 1 
+            SELECT TOP 1
                 @ExchangeRateToEUR = RateToEUR,
                 @ExchangeRateId = ExchangeRateId
             FROM prod.ExchangeRatesDim
@@ -120,10 +120,10 @@ BEGIN
 
 			SET @TransactionBK = CONCAT('ORD', @TransactionDateStr, '-', RIGHT('00000' + CAST(@NextSequence AS NVARCHAR(5)), 5));
 
-            INSERT INTO @CartItems(ProductName, ProductLocalPrice)
-            SELECT 
+            INSERT INTO @CartItems (ProductName, ProductLocalPrice)
+            SELECT
                 cart_key_value.[key],
-                TRY_CAST(cart_key_value.[value] AS DECIMAL(18,2))
+                TRY_CAST(cart_key_value.[value] AS DECIMAL(18, 2))
             FROM (SELECT @TransactionJson AS TransactionJson) AS r
             CROSS APPLY OPENJSON(r.TransactionJson, '$.Cart') AS cart_item
             CROSS APPLY OPENJSON(cart_item.value) AS cart_key_value;
@@ -146,7 +146,7 @@ BEGIN
                     CONTINUE;
                 END
 
-                DECLARE @ProductStandardizedPrice DECIMAL(18,2) = ROUND(ISNULL(@ProductLocalPrice,0) * NULLIF(@ExchangeRateToEUR,0), 2);
+                DECLARE @ProductStandardizedPrice DECIMAL(18, 2) = ROUND(ISNULL(@ProductLocalPrice, 0) * NULLIF(@ExchangeRateToEUR, 0), 2);
 
                 SET @CartLocalTotal += ISNULL(@ProductLocalPrice, 0);
                 SET @CartStandardizedTotal += @ProductStandardizedPrice;
@@ -198,6 +198,6 @@ BEGIN
     END TRY
     BEGIN CATCH
         DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
-        RAISERROR('Error in stage.ProcessRawTransactions: %s', 16, 1, @ErrorMessage);
+        RAISERROR ('Error in stage.ProcessRawTransactions: %s', 16, 1, @ErrorMessage);
     END CATCH;
 END;

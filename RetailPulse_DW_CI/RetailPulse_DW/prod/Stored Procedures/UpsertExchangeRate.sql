@@ -1,7 +1,7 @@
-﻿CREATE   PROCEDURE [prod].[UpsertExchangeRate]
+﻿CREATE PROCEDURE [prod].[UpsertExchangeRate]
     @Country NVARCHAR(255),
     @Currency NVARCHAR(10),
-    @RateToEUR DECIMAL(18,6)
+    @RateToEUR DECIMAL(18, 6)
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -10,15 +10,15 @@ BEGIN
 
     -- Deactivate previous rows for this currency
     UPDATE prod.ExchangeRatesDim
-    SET 
+    SET
 		IsCurrent = 0,
         ExpirationDate = @Today
     WHERE
 		Country = @Country
-		AND Currency = @Currency 
+		AND Currency = @Currency
 		AND IsCurrent = 1;
 
-    INSERT INTO prod.ExchangeRatesDim 
+    INSERT INTO prod.ExchangeRatesDim
 	(
         Country,
 		Currency,

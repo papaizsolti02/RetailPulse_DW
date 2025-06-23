@@ -1,4 +1,4 @@
-﻿CREATE   PROCEDURE [prod].[UpsertProductsDim]
+﻿CREATE PROCEDURE [prod].[UpsertProductsDim]
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -8,7 +8,7 @@ BEGIN
 
         -- Step 1: Expire old records if BUSINESSKEYHASH exists in both stage and prod
         UPDATE p
-        SET 
+        SET
             ExpirationDate = GETDATE(),
             IsCurrent = 0
         FROM prod.ProductsDim p
@@ -28,7 +28,7 @@ BEGIN
             HASHDATA,
 			EffectiveDate
         )
-        SELECT 
+        SELECT
             s.Name,
             s.Description,
             s.Color,
@@ -43,7 +43,7 @@ BEGIN
 		WHERE NOT EXISTS (
             SELECT 1
             FROM prod.ProductsDim p
-            WHERE 
+            WHERE
                 p.BUSINESSKEYHASH = s.BUSINESSKEYHASH
                 AND p.IsCurrent = 1
         );
