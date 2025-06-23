@@ -1,0 +1,10 @@
+C:\Users\papai\OneDrive\Desktop\RetailPulse_DW\RetailPulse_DW_CI\RetailPulse_DW\bin\Release\RetailPulse_DW.dacpac
+C:\Users\papai\OneDrive\Desktop\RetailPulse_DW\RetailPulse_DW_CI\RetailPulse_DW\bin\Release\Database1.dll
+C:\Users\papai\OneDrive\Desktop\RetailPulse_DW\RetailPulse_DW_CI\RetailPulse_DW\bin\Release\Database1.pdb
+C:\Users\papai\OneDrive\Desktop\RetailPulse_DW\RetailPulse_DW_CI\RetailPulse_DW\obj\Release\RetailPulse_DW.sqlproj.AssemblyReference.cache
+C:\Users\papai\OneDrive\Desktop\RetailPulse_DW\RetailPulse_DW_CI\RetailPulse_DW\obj\Release\Model.xml
+C:\Users\papai\OneDrive\Desktop\RetailPulse_DW\RetailPulse_DW_CI\RetailPulse_DW\obj\Release\refactor.xml
+C:\Users\papai\OneDrive\Desktop\RetailPulse_DW\RetailPulse_DW_CI\RetailPulse_DW\obj\Release\postdeploy.sql
+C:\Users\papai\OneDrive\Desktop\RetailPulse_DW\RetailPulse_DW_CI\RetailPulse_DW\obj\Release\predeploy.sql
+C:\Users\papai\OneDrive\Desktop\RetailPulse_DW\RetailPulse_DW_CI\RetailPulse_DW\obj\Release\Database1.dll
+C:\Users\papai\OneDrive\Desktop\RetailPulse_DW\RetailPulse_DW_CI\RetailPulse_DW\obj\Release\Database1.pdb
