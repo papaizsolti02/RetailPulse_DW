@@ -32,5 +32,5 @@ jobs:
           sqlpackage /Action:Publish `
             /SourceFile:$dacpacPath `
             /TargetServerName:"${{ env.SQL_SERVER }}" `
-            /TargetDatabaseName:"test" `
+            /TargetDatabaseName:"${{ env.SQL_DATABASE }}" `
             /TargetTrustServerCertificate:true
