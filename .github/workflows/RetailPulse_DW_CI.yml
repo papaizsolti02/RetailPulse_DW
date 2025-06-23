@@ -19,7 +19,7 @@ jobs:
         uses: microsoft/setup-msbuild@v1
 
       - name: Build DACPAC project
-        run: msbuild RetailPulse_DW_CI\RetailPulse_DW.csproj /p:Configuration=Release /p:Platform="Any CPU"
+        run: msbuild RetailPulse_DW_CI\RetailPulse_DW\RetailPulse_DW.csproj /p:Configuration=Release /p:Platform="Any CPU"
 
       - name: Publish DACPAC using sqlpackage
         shell: powershell
