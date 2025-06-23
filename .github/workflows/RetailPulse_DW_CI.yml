@@ -33,5 +33,4 @@ jobs:
             /SourceFile:$dacpacPath `
             /TargetServerName:"${{ env.SQL_SERVER }}" `
             /TargetDatabaseName:"${{ env.SQL_DATABASE }}" `
-            /TargetIntegratedSecurity:true `
             /TargetTrustServerCertificate:true
