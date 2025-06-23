@@ -15,15 +15,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Build DACPAC project using Visual Studio Dev Command Prompt
+      - name: Build DACPAC project using Developer Command Prompt
         shell: cmd
         run: |
-          CALL "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat"
+          CALL "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat" && ^
           msbuild RetailPulse_DW_CI\RetailPulse_DW\RetailPulse_DW.sqlproj /p:Configuration=Release /p:Platform="Any CPU"
 
       - name: Verify DACPAC file exists
         shell: cmd
-        run: dir RetailPulse_DW_CI\RetailPulse_DW\bin\Release
+        run: |
+          dir RetailPulse_DW_CI\RetailPulse_DW\bin\Release
 
       - name: Publish DACPAC using sqlpackage
         shell: powershell
