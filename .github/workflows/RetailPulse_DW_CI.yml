@@ -1,7 +1,7 @@
 name: Build and Deploy DACPAC for RetailPulse_DW
 
 on:
-  workflow_dispatch:  # Manual trigger
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -20,7 +20,7 @@ jobs:
 
       - name: Build DACPAC project
         run: msbuild RetailPulse_DW_CI\RetailPulse_DW.csproj /p:Configuration=Release /p:Platform="Any CPU"
-      
+
       - name: Publish DACPAC using sqlpackage
         shell: powershell
         run: |

@@ -1,7 +1,7 @@
 name: Run One-Time Processing Script
 
 on:
-  workflow_dispatch:  # Only runs manually via GitHub Actions UI
+  workflow_dispatch:
 
 jobs:
   run-one-time-processing:
