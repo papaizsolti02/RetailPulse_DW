@@ -1,0 +1,37 @@
+name: Build and Deploy DACPAC for RetailPulse_DW
+
+on:
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted
+
+    env:
+      SQL_SERVER: ${{ secrets.SQL_SERVER }}
+      SQL_DATABASE: ${{ secrets.SQL_DATABASE }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup MSBuild (Visual Studio build environment)
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Build DACPAC project
+        run: msbuild RetailPulse_DW_CI\RetailPulse_DW.csproj /p:Configuration=Release /p:Platform="Any CPU"
+      
+      - name: Publish DACPAC using sqlpackage
+        shell: powershell
+        run: |
+          $dacpacPath = "RetailPulse_DW_CI\RetailPulse_DW\bin\Release\RetailPulse_DW.dacpac"
+          if (-Not (Test-Path $dacpacPath)) {
+            Write-Error "DACPAC file not found at $dacpacPath"
+            exit 1
+          }
+          sqlpackage /Action:Publish `
+            /SourceFile:$dacpacPath `
+            /TargetServerName:"${{ env.SQL_SERVER }}" `
+            /TargetDatabaseName:"${{ env.SQL_DATABASE }}" `
+            /TargetIntegratedSecurity:true `
+            /TargetTrustServerCertificate:true
