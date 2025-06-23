@@ -3,6 +3,7 @@
     [Source]     NVARCHAR (255) DEFAULT ('https://randomuser.me/api/') NULL,
     [UserJson]   NVARCHAR (MAX) NOT NULL,
     [InsertedAt] DATETIME       DEFAULT (getdate()) NULL,
+    [test] INT NULL,
     PRIMARY KEY CLUSTERED ([UserId] ASC)
 );
 
